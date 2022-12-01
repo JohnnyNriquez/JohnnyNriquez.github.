@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Johnny Henriquez" />
+    
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico">
+    <title>Exploring 2020 across many variables including Covid-19</title>
+    <meta name="generator" content="Hugo 0.107.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,200bold,400old" />
+    
+    <!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+    
+  </head>
+
+  <body>
+    <div id="wrap">
+      
+      <nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/"><i class="fa fa-home"></i></a>
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="navbar-collapse collapse" id="navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+        <li><a href="/post/">BLOG</a></li>
+        
+        <li><a href="/projects/">PROJECTS</a></li>
+        
+        <li><a href="/resume/">RESUME</a></li>
+        
+      
+      </ul>
+    </div>
+  </div>
+</nav>
+
+      <div class="container">
+        <div class="blog-post">
+          <h3>
+            <strong><a href="/project/project1/">Exploring 2020 across many variables including Covid-19</a></strong>
+          </h3>
+        </div>
+ 
+<div class="blog-title">
+          <h4>
+         October 19, 2022 
+            &nbsp;&nbsp;
+            
+          </h4>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="blogpost">
+              <h1 id="introduction"><strong>Introduction</strong></h1>
+<p>2020 was most definitely a step into the unknown for the whole world as Covid-19 ravaged through countries for multiple years. However, 2020 was an especially significant year as many families were destroyed, businesses lost, and lives being brought to a screeching halt. This made 2020 a year to forget, and our research group is no differed. Hence for our project, we want to go back to the year 2020 and look at trends that may have been overlooked at the time. Is GDP a factor into how many cases were present in each continent? Does the development of a country matter? Questions like these and more will be answered in our research. However, to answer these questions we must be able to join the datasets together with some key variable. Luckily, these datasets have a variable that is joinable, &ldquo;Country.&rdquo; Although each dataset may not have each country listed under the same variable name, they all share the same value, thus we can rename the variable and join accordingly.</p>
+<h2 id="sources"><strong>Sources</strong></h2>
+<p>For our research, we wanted to include many different metrics that may be indicators for Covid-19. Hence, we found data sets that had different variables from one another. For our Population dataset, we used a dataset from &ldquo;<a href="https://www.worldometers.info/world-population/population-by-country/">https://www.worldometers.info/world-population/population-by-country/</a>&rdquo;. Within this dataset, there were 235 entries with a unique observation displaying the country, population, yearly change, net change, and many other factors relating to population. This dataset holds both numerical and categorical variables. For our world GPD dataset, this was found from &ldquo;<a href="https://ourworldindata.org/grapher/gross-domestic-product">https://ourworldindata.org/grapher/gross-domestic-product</a>&rdquo; which has 10,457 entries with a unique observation in the dataset displaying the country, GPD, year of observation, and country code. This dataset has exclusively numerical variables besides country. For our Covid-19 dataset, this was found on <a href="https://github.com/owid/covid-19-data/blob/master/public/data/README.md">https://github.com/owid/covid-19-data/blob/master/public/data/README.md</a> which had 226113 observations. The reason for the extreme amount of observations is due to there being an observation for each country for each day. A unique observation from this data set will include iso code, continent, location, date, and many more variables. This dataset holds both numerical and categorical variables.</p>
+<h2 id="expected-trends"><strong>Expected Trends</strong></h2>
+<p>After joining the data set, there are trends we expect to see immediately. The first is that for countries with larger populations, there will be a larger amount of Covid cases. Another expected trend is that the death to GDP ratio will be much larger in smaller countries. This is because countries with a smaller GDP indicate that they do not have the infrastructure to fight the virus.</p>
+<h1 id="tidying"><strong>Tidying</strong></h1>
+<p>Taking a look at our datasets sourced above, we can see that the data was tidy for our population and gdp datasets. However, the Covid-19 data set was not tidy as we believed there to be variable names for the tests_units variable within a column. For elaboration, tests_units before tidying is a categorical variable which represents how countries were reporting their testing.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#75715e"># &#34;head&#34; used to view top six rows of each dataset to determine if tidying is necessary</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">head</span>(gross_domestic_product)
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 6 × 4
+##   Entity      Code   Year `GDP (constant 2015 US$)`
+##   &lt;chr&gt;       &lt;chr&gt; &lt;dbl&gt;                     &lt;dbl&gt;
+## 1 Afghanistan AFG    2002                7228792320
+## 2 Afghanistan AFG    2003                7867259392
+## 3 Afghanistan AFG    2004                7978511360
+## 4 Afghanistan AFG    2005                8874475520
+## 5 Afghanistan AFG    2006                9349916672
+## 6 Afghanistan AFG    2007               10642666496
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#a6e22e">head</span>(pop)
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 6 × 12
+##      no Countr…¹ Popul…² Yearl…³ Net C…⁴ Densi…⁵ Land …⁶ Migra…⁷ Fert.…⁸ Med. …⁹
+##   &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  
+## 1     1 China     1.44e9 0.39%    5.54e6     153 9388211 -348399 1.7     38     
+## 2     2 India     1.38e9 0.99%    1.36e7     464 2973190 -532687 2.2     28     
+## 3     3 United …  3.31e8 0.59%    1.94e6      36 9147420  954806 1.8     38     
+## 4     4 Indones…  2.74e8 1.07%    2.90e6     151 1811570  -98955 2.3     30     
+## 5     5 Pakistan  2.21e8 2.00%    4.33e6     287  770880 -233379 3.6     23     
+## 6     6 Brazil    2.13e8 0.72%    1.51e6      25 8358140   21200 1.7     33     
+## # … with 2 more variables: `Urban Pop %` &lt;chr&gt;, `World Share` &lt;chr&gt;, and
+## #   abbreviated variable names ¹​`Country (or dependency)`, ²​`Population 2020`,
+## #   ³​`Yearly Change`, ⁴​`Net Change`, ⁵​`Density  (P/Km²)`, ⁶​`Land Area (Km²)`,
+## #   ⁷​`Migrants (net)`, ⁸​`Fert. Rate`, ⁹​`Med. Age`
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#a6e22e">head</span>(owid_covid_data)
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 6 × 67
+##   iso_code continent location date       total…¹ new_c…² new_c…³ total…⁴ new_d…⁵
+##   &lt;chr&gt;    &lt;chr&gt;     &lt;chr&gt;    &lt;date&gt;       &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+## 1 AFG      Asia      Afghani… 2020-02-24       5       5  NA          NA      NA
+## 2 AFG      Asia      Afghani… 2020-02-25       5       0  NA          NA      NA
+## 3 AFG      Asia      Afghani… 2020-02-26       5       0  NA          NA      NA
+## 4 AFG      Asia      Afghani… 2020-02-27       5       0  NA          NA      NA
+## 5 AFG      Asia      Afghani… 2020-02-28       5       0  NA          NA      NA
+## 6 AFG      Asia      Afghani… 2020-02-29       5       0   0.714      NA      NA
+## # … with 58 more variables: new_deaths_smoothed &lt;dbl&gt;,
+## #   total_cases_per_million &lt;dbl&gt;, new_cases_per_million &lt;dbl&gt;,
+## #   new_cases_smoothed_per_million &lt;dbl&gt;, total_deaths_per_million &lt;dbl&gt;,
+## #   new_deaths_per_million &lt;dbl&gt;, new_deaths_smoothed_per_million &lt;dbl&gt;,
+## #   reproduction_rate &lt;dbl&gt;, icu_patients &lt;dbl&gt;,
+## #   icu_patients_per_million &lt;dbl&gt;, hosp_patients &lt;dbl&gt;,
+## #   hosp_patients_per_million &lt;dbl&gt;, weekly_icu_admissions &lt;dbl&gt;, …
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#75715e"># Since the owid_covid_data dataset was not tidy, will use pivot_wider to expand the tests_units column into its own respective columns with values coming from the variable tests_per_case</span>
+</span></span><span style="display:flex;"><span>tidy_owid<span style="color:#f92672">&lt;-</span>owid_covid_data<span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">pivot_wider</span>(names_from <span style="color:#f92672">=</span> tests_units,
+</span></span><span style="display:flex;"><span>              values_from <span style="color:#f92672">=</span> tests_per_case)
+</span></span></code></pre></div><h2 id="joiningmerging"><strong>Joining/Merging</strong></h2>
+<p>We planned to join our various datasets based off country. However, referring to the tidying section above, it is clear to see that not all datasets are named specifically by country. Thus to address this issue, we will be using an assortment of dplyr functions to allow us to join the three datasets together.</p>
+<p>Another issue is that our datasets as said above may have an extreme amount of observations due to observations being made each day for each country. Thus before joining, we will filter the data for the data just in the year 2020.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#75715e"># Rename so country is a named variable as well as filter for only values from 2020</span>
+</span></span><span style="display:flex;"><span>GDP<span style="color:#f92672">&lt;-</span>gross_domestic_product<span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">rename</span>(GDP<span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;GDP (constant 2015 US$)&#34;</span>)<span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">rename</span>(Country <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Entity&#34;</span>)<span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">filter</span>(Year<span style="color:#f92672">==</span><span style="color:#e6db74">&#34;2020&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">nrow</span>(GDP) <span style="color:#75715e"># Count observations</span>
+</span></span></code></pre></div><pre tabindex="0"><code>## [1] 210
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#75715e"># 2020 was already the only year for observations so only had to rename such that country is a unique variable name</span>
+</span></span><span style="display:flex;"><span>Population <span style="color:#f92672">&lt;-</span> pop <span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">rename</span>(Country <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Country (or dependency)&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">nrow</span>(Population) <span style="color:#75715e"># Count observations</span>
+</span></span></code></pre></div><pre tabindex="0"><code>## [1] 235
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#75715e"># Once again rename so that country is a unique variable name</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># This dataset was a little more tricky to work for only 2020 values since there was an observation per country per day. </span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># So, we filtered for only data found at the end of 2020</span>
+</span></span><span style="display:flex;"><span>Covid<span style="color:#f92672">&lt;-</span>tidy_owid<span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">rename</span>(Country<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;location&#34;</span>)<span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">filter</span>(date<span style="color:#f92672">==</span><span style="color:#e6db74">&#34;2020-12-31&#34;</span>) <span style="color:#75715e"># We filter by this data so that we get the total amount of cases ammased by the end of the year 2020</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">nrow</span>(Covid) <span style="color:#75715e"># Count observations</span>
+</span></span></code></pre></div><pre tabindex="0"><code>## [1] 232
+</code></pre><p>Now that we have addressed the issue extreme amounts of observations, we now are able to join our datasets. Luckily, the rename function within dplyr allowed us to rename all the columns within the datasets that held the country name with simply the word &ldquo;Country.&rdquo; This will now be our key variable as we prepare to join our dataset.</p>
+<p>Also before joining, observe how the GDP dataset had 210 observations which had a unique variable of GDP, the Population set having 235 observations which had a unique variable of &ldquo;Net Change&rdquo; (measure of pop. change from prev. year to next), and the Covid dataset having 228 observations with a unique variable being &ldquo;total_cases&rdquo;. As said above, all countries now share the ID Country. As for ID&rsquo;s that may be left out, there are countries in the population dataset such as the &ldquo;Carribean Netherlands&rdquo; which is not in the other datasets.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#75715e"># Now we can join our data</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># First join GDP dataset to population dataset with key variable Country</span>
+</span></span><span style="display:flex;"><span>join1 <span style="color:#f92672">&lt;-</span> Population <span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">inner_join</span>(GDP,by<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Country&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Now with our two previously joined datasets, join the Covid dataset with key variable country</span>
+</span></span><span style="display:flex;"><span>join2 <span style="color:#f92672">&lt;-</span> join1 <span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">inner_join</span>(Covid,by<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Country&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">nrow</span>(join2)
+</span></span></code></pre></div><pre tabindex="0"><code>## [1] 176
+</code></pre><p>As seen with our code above, we joined our three completely different datasets by the key variable &ldquo;Country.&rdquo; We opted to use the inner join function to join our data to give us more control of our data. We felt that by using inner join, we would be able to manually select which variables we want to manipulate and which variables we want to remove instead of r joining only by key variable.</p>
+<p>After joining our data with inner join, we were left with 176 observations, meaning that 59 rows were dropped. Although at face vaule this does not seem like a problem, this may be an issue later on. Our suspicion is that some of the smaller countries or countries with two word names were dropped from the dataset. This will cause skewing of data that is largely unavoidable.</p>
+<h1 id="wrangling"><strong>Wrangling</strong></h1>
+<p>Now with our joined dataset, it is time to find relations between our specific variables using dplyr functions.</p>
+<h2 id="select"><strong>Select</strong></h2>
+<p>Some variables within our joined dataset serve no purpose now and are extra information. Although we did use inner join earlier, we stand by this decision as we can pick freely from all our variables which were useful. We will use select to only keep variables relevant to our study.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#75715e"># Saving to a new data set</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Using dplyr function select which allows us to select columns by index number rather than by name which is far more efficient</span>
+</span></span><span style="display:flex;"><span>new_data <span style="color:#f92672">&lt;-</span> join2 <span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">select</span>(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">6</span>,<span style="color:#ae81ff">7</span>,<span style="color:#ae81ff">11</span>,<span style="color:#ae81ff">15</span>,<span style="color:#ae81ff">17</span>,<span style="color:#ae81ff">19</span>,<span style="color:#ae81ff">22</span>,<span style="color:#ae81ff">40</span>,<span style="color:#ae81ff">48</span>,<span style="color:#ae81ff">49</span>,<span style="color:#ae81ff">63</span>,<span style="color:#ae81ff">64</span>,<span style="color:#ae81ff">76</span>,<span style="color:#ae81ff">74</span>,<span style="color:#ae81ff">10</span>,<span style="color:#ae81ff">73</span>)
+</span></span></code></pre></div><h2 id="filter-group_by-summarize-arrange"><strong>Filter, Group_by, Summarize, Arrange</strong></h2>
+<p>Now with our new_data dataset, we can use an assortment to generate results of our data.</p>
+<p>A common idea among society is that the Asian continent had the largest amount of cases. This may be because of the virus being said to have originated from China or other ideas stemming from media and society. To see if this is true, we will find the sum of all cases by continents in the joined dataset.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>new_data<span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">filter</span>(<span style="color:#f92672">!</span><span style="color:#a6e22e">is.na</span>(total_cases))<span style="color:#f92672">%&gt;%</span> <span style="color:#75715e"># Remove NA values so calculations can be done</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">group_by</span>(continent)<span style="color:#f92672">%&gt;%</span> <span style="color:#75715e"># Without group_by, we would be given the sum of all cases from the dataset</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">summarize</span>(total_cases_by_continent<span style="color:#f92672">=</span><span style="color:#a6e22e">sum</span>(total_cases))<span style="color:#f92672">%&gt;%</span> <span style="color:#75715e"># Sums total cases</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">arrange</span>(<span style="color:#a6e22e">desc</span>(total_cases_by_continent)) <span style="color:#75715e"># Arrange function with descending parameter displays data from greatest to least</span>
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 6 × 2
+##   continent     total_cases_by_continent
+##   &lt;chr&gt;                            &lt;dbl&gt;
+## 1 North America                 23193933
+## 2 Europe                        23059171
+## 3 Asia                          20570107
+## 4 South America                 13085660
+## 5 Africa                         2702570
+## 6 Oceania                          31440
+</code></pre><p>After the use of the dplyr functions filter, group_by, summarize, and arrange, we found that Asia was neither first nor second, but in fact third in total cases behind Europe and North America with 20570107 people!</p>
+<p>We also wanted to observe the mean population by continent along with the mean of total testing to create a ratio to determine of must testing was being performed for each test.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>new_data<span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">filter</span>(<span style="color:#f92672">!</span><span style="color:#a6e22e">is.na</span>(total_tests))<span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">filter</span>(<span style="color:#f92672">!</span><span style="color:#a6e22e">is.na</span>(`Population 2020`))<span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">group_by</span>(continent)<span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">summarize</span>(mean_pop<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(`Population 2020`),mean_tests<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(total_tests), mean_gdp<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(GDP))<span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">mutate</span>(ratio_of_tests_pop<span style="color:#f92672">=</span>mean_tests<span style="color:#f92672">/</span>mean_pop)<span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">arrange</span>(<span style="color:#a6e22e">desc</span>(ratio_of_tests_pop))
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 6 × 5
+##   continent      mean_pop mean_tests mean_gdp ratio_of_tests_pop
+##   &lt;chr&gt;             &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;              &lt;dbl&gt;
+## 1 Europe        17786913.   9210436.  4.67e11             0.518 
+## 2 North America 55652360.  28501224.  2.25e12             0.512 
+## 3 Oceania        7846834.   3192247.  4.26e11             0.407 
+## 4 South America 40123511.   5676987.  3.23e11             0.141 
+## 5 Asia          97527781.  11570517.  5.37e11             0.119 
+## 6 Africa        46088805.   1363024.  9.57e10             0.0296
+</code></pre><p>After using more dplyr functions, we were able to find not only the mean population for each continent, mean gdp for each continent, but also the mean of tests per continent as well. With these two summarized variables, we were able to create a new variable named ratio_of_tests_pop which is a calculated ratio of the mean covid tests performed per mean population. It was found that Europe had the largest ratio of 0.5178 test per person with North America in a close second with a ratio of 0.5121 test per person.</p>
+<h2 id="mutate"><strong>Mutate</strong></h2>
+<p>A common indicator of overall country development is the human development index which is a statistic of life expectancy, education, and per capita income, which is all used to grade human development. Since we do not have a grade for overall country development, we will use this index to create a categorical variable named country development which will be split into four different categories of development.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#75715e"># To create the variable, use the mutate function with nested ifelse statements to pass through the human index variable</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># If a condition is not met, send to the next condition is met</span>
+</span></span><span style="display:flex;"><span>new_data<span style="color:#f92672">&lt;-</span>new_data<span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">mutate</span>(country_development <span style="color:#f92672">=</span> <span style="color:#a6e22e">ifelse</span>(human_development_index<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">.45</span>, <span style="color:#e6db74">&#34;Under Developed&#34;</span>,
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">ifelse</span>(human_development_index<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">.55</span>, <span style="color:#e6db74">&#34;Average Development&#34;</span>,
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">ifelse</span>(human_development_index<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">.75</span>, <span style="color:#e6db74">&#34;Slightly Developed&#34;</span>,
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">ifelse</span>(human_development_index<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">.85</span>, <span style="color:#e6db74">&#34;Above Avg. Development&#34;</span>, <span style="color:#e6db74">&#34;Extremely Developed&#34;</span>)))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>new_data<span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">select</span>(country_development,Country)
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 176 × 2
+##    country_development    Country      
+##    &lt;chr&gt;                  &lt;chr&gt;        
+##  1 Above Avg. Development China        
+##  2 Slightly Developed     India        
+##  3 Extremely Developed    United States
+##  4 Slightly Developed     Indonesia    
+##  5 Slightly Developed     Pakistan     
+##  6 Above Avg. Development Brazil       
+##  7 Average Development    Nigeria      
+##  8 Slightly Developed     Bangladesh   
+##  9 Above Avg. Development Russia       
+## 10 Above Avg. Development Mexico       
+## # … with 166 more rows
+</code></pre><p>We can now see the country development for all countries in our joined dataset</p>
+<p>One last statistic we want to calculate is the median age per continent.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>new_data<span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">filter</span>(`Med. Age` <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;N.A.&#34;</span>)<span style="color:#f92672">%&gt;%</span> <span style="color:#75715e"># Filter NA values</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">mutate</span>(median_age<span style="color:#f92672">=</span><span style="color:#a6e22e">as.numeric</span>(`Med. Age`))<span style="color:#f92672">%&gt;%</span> <span style="color:#75715e"># Transform variable into numeric</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">group_by</span>(continent)<span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">summarize</span>(mean_median<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(median_age))<span style="color:#f92672">%&gt;%</span> <span style="color:#75715e"># Find mean per continent</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">arrange</span>(<span style="color:#a6e22e">desc</span>(mean_median)) <span style="color:#75715e"># arrange in descending order</span>
+</span></span></code></pre></div><pre tabindex="0"><code>## # A tibble: 6 × 2
+##   continent     mean_median
+##   &lt;chr&gt;               &lt;dbl&gt;
+## 1 Europe               41.9
+## 2 North America        32.1
+## 3 Asia                 31.3
+## 4 South America        30.4
+## 5 Oceania              27.5
+## 6 Africa               21.2
+</code></pre><p>After using an arrangement of dplyr functions, we can see that the continent with the highest median age is the continent of Europe with a average median age of 41.9 years.</p>
+<h2 id="summary-stats"><strong>Summary Stats</strong></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#75715e"># summary function shows different descriptive stats for each variable</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">summary</span>(new_data<span style="color:#f92672">$</span>`Population 2020`)
+</span></span></code></pre></div><pre tabindex="0"><code>##       Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+##      39242    2400408    8976711   42668533   31533076 1439323776
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#a6e22e">summary</span>(new_data<span style="color:#f92672">$</span>GDP)
+</span></span></code></pre></div><pre tabindex="0"><code>##           Min.        1st Qu.         Median           Mean        3rd Qu. 
+##      207699808    10780408320    40607787008   456842613493   247614771200 
+##           Max. 
+## 19294482071552
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#a6e22e">summary</span>(new_data<span style="color:#f92672">$</span>total_cases)
+</span></span></code></pre></div><pre tabindex="0"><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max.     NA&#39;s 
+##        1     6395    50948   474959   217153 20217246        2
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#a6e22e">summary</span>(<span style="color:#a6e22e">as.factor</span>(new_data<span style="color:#f92672">$</span>`Urban Pop %`))
+</span></span></code></pre></div><pre tabindex="0"><code>##  13%  14%  17%  18%  19%  21%  23%  24%  25%  26%  27%  28%  29%  30%  31%  35% 
+##    1    1    1    4    1    2    2    2    1    2    2    1    1    1    4    5 
+##  36%  37%  38%  39%  41%  43%  44%  45%  46%  47%  48%  49%  50%  51%  52%  53% 
+##    2    1    3    3    1    5    1    2    2    2    1    1    1    1    4    1 
+##  54%  55%  56%  57%  58%  59%  60%  61%  62%  63%  64%  65%  66%  67%  68%  69% 
+##    1    4    5    6    3    3    1    1    1    4    1    1    1    4    3    4 
+##  70%  71%  72%  73%  74%  76%  78%  79%  80%  81%  82%  83%  84%  85%  86%  87% 
+##    3    1    1    5    3    4    4    3    4    1    2    3    2    3    4    3 
+##  88%  89%  91%  92%  93%  94%  95%  96%  97%  98% N.A. 
+##    5    1    1    2    3    1    1    2    2    1    6
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#a6e22e">summary</span>(<span style="color:#a6e22e">as.factor</span>(new_data<span style="color:#f92672">$</span>country_development))
+</span></span></code></pre></div><pre tabindex="0"><code>## Above Avg. Development    Average Development    Extremely Developed 
+##                     44                     23                     42 
+##     Slightly Developed        Under Developed                   NA&#39;s 
+##                     55                      5                      7
+</code></pre><p>After reviewing all the summary stats for the numeric variables, we were able to see all the min, max, and mean values of the numeric variables and some of those results were very interesting. The results showed that there was a mean population of 42,668,533 people around all countries in 2020, the maximum GDP a country had was $19,294,482,071,552, and the minimum total cases a country had was only 1 case! The categorical variables were very interesting as well, with the highest frequency Urban Population percentage being 57%, and only 5 countries were under developed, while 42 countries are extremely developed. # Visualizing</p>
+<h1 id="visualizing"><strong>Visualizing</strong></h1>
+<h3 id="single-variable-plot-1-of-2"><strong>Single Variable Plot 1 of 2</strong></h3>
+<p>For our first visualization, we wanted to see which continents were missing countries from our joined dataset. This could be for a number of reasons such as lacking a Key ID or being filtered out in one of the previous chunks.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#75715e"># Use dplyr ggplot</span>
+</span></span><span style="display:flex;"><span>new_data<span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">group_by</span>(continent)<span style="color:#f92672">%&gt;%</span> <span style="color:#75715e"># ensures the countries are summed based off continent</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">ggplot</span>(<span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>continent,fill<span style="color:#f92672">=</span>continent))<span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">geom_bar</span>()<span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">labs</span>(x<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Continent&#34;</span>,y<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Count of Countries per Continent&#34;</span>,title<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Visulaization of count of countries in dataset&#34;</span>)<span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">scale_y_continuous</span>(breaks <span style="color:#f92672">=</span> <span style="color:#a6e22e">seq</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">5</span>))<span style="color:#f92672">+</span> <span style="color:#75715e">#Change scale to make counts viewable</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">theme_bw</span>()<span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">theme</span>(legend.position <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;none&#34;</span>)
+</span></span></code></pre></div><!-- raw HTML omitted -->
+<p>After viewing the visualizations, we are able to see the number of observations per country. However, with deeper research we were able to observe the total countries that existed in each continent in 2020. We can see that Africa is missing six countries from our data set. Asia is missing 5 countries, Europe is missing 3 countries, Oceania is missing 5, and South America is missing one. However, North America has 24 total observation which means there was an extra counted. This could be because U.S. territories were listed as a country in the data set. It is surprising that Oceania, the smallest continent by far, wastied for the most amount of countries missing with Asia.</p>
+<h3 id="single-variable-plot-2-of-2"><strong>Single Variable Plot 2 of 2</strong></h3>
+<p>For this visualization, we wanted to observe the counts of countries for each type of development which was a variable created in the &ldquo;mutate&rdquo; section of our report.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>new_data<span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">group_by</span>(country_development)<span style="color:#f92672">%&gt;%</span> <span style="color:#75715e"># sums observations by type of development</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">filter</span>(`country_development` <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;N.A.&#34;</span>)<span style="color:#f92672">%&gt;%</span> <span style="color:#75715e"># do not want ot count NA values</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">ggplot</span>(<span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>`country_development`))<span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">geom_bar</span>(<span style="color:#a6e22e">aes</span>(fill <span style="color:#f92672">=</span> country_development))<span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">theme_minimal</span>()<span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">theme</span>(axis.text.x <span style="color:#f92672">=</span> <span style="color:#a6e22e">element_text</span>(angle <span style="color:#f92672">=</span> <span style="color:#ae81ff">45</span>, hjust <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>))<span style="color:#f92672">+</span> <span style="color:#75715e"># Make Axis legible</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">theme</span>(legend.position <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;none&#34;</span>)<span style="color:#f92672">+</span> <span style="color:#75715e">#remove legend</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">scale_y_continuous</span>(breaks <span style="color:#f92672">=</span> <span style="color:#a6e22e">seq</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">60</span>, <span style="color:#ae81ff">5</span>))<span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">labs</span>(x<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Development of Country&#34;</span>,y<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Count of Country Development&#34;</span>,title<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Visualization of Counts of Countries by Development&#34;</span>, colour<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Development of Country&#34;</span>)
+</span></span></code></pre></div><!-- raw HTML omitted -->
+<p>After counting the number of observations for each type of development in our joined dataset, it was found that among all the countries in our joined dataset, the mode of all countries were found to be &ldquo;Slightly Developed&rdquo; whereas only 5 countries were found to be &ldquo;Under Developed&rdquo; which is an incredible sign for the world. Having an increased development means that there will be better infrastructure to counterract the virus.</p>
+<h3 id="two-variable-plot-1-of-2"><strong>Two variable plot 1 of 2</strong></h3>
+<p>For our first bivariate representation, we wanted to have an in depth analysis of which continents were able to treat their covid cases. Since we do not have such a variable, we will create one with the dplyr function mutate. we will call this function death_to_case_ratio which is a measure of deaths per case. This will be colored by continent.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>new_data<span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">filter</span>(<span style="color:#f92672">!</span><span style="color:#a6e22e">is.na</span>(total_cases))<span style="color:#f92672">%&gt;%</span> <span style="color:#75715e">#Remove NA values</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">filter</span>(<span style="color:#f92672">!</span><span style="color:#a6e22e">is.na</span>(total_deaths))<span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">mutate</span>(death_to_case_ratio <span style="color:#f92672">=</span> total_deaths<span style="color:#f92672">/</span>total_cases)<span style="color:#f92672">%&gt;%</span> <span style="color:#75715e"># Create the ratio variable</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">group_by</span>(continent)<span style="color:#f92672">%&gt;%</span> <span style="color:#75715e"># Summarize by continent</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">ggplot</span>(<span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>continent, y<span style="color:#f92672">=</span>death_to_case_ratio , fill<span style="color:#f92672">=</span>continent))<span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">geom_boxplot</span>() <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">theme_dark</span>()<span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">theme</span>(axis.text.x <span style="color:#f92672">=</span> <span style="color:#a6e22e">element_text</span>(angle <span style="color:#f92672">=</span> <span style="color:#ae81ff">45</span>, hjust <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>))<span style="color:#f92672">+</span> <span style="color:#75715e"># angle adjustment for legibility</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">scale_y_continuous</span>(breaks <span style="color:#f92672">=</span> <span style="color:#a6e22e">seq</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">.1</span>, <span style="color:#ae81ff">.01</span>)) <span style="color:#f92672">+</span> <span style="color:#75715e"># scale adjustment</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">labs</span>(x<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Continents&#34;</span>,y<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Ratio&#34;</span>,title<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Ratio of Death per Case by Continent&#34;</span>)<span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">theme</span>(legend.position <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;none&#34;</span>)
+</span></span></code></pre></div><!-- raw HTML omitted -->
+<p>After creating our bivariate representation, there were many obvious conclusions. Overall, South America had the largest death per case ratio which implies the lack of ability to treat cases. Asia on the other hand did a much better job as a whole in treating their covid cases. The remaining three countries had near identical results but Africa had not only the largest distribution among the three, but of all the continents as well. This means that some parts of Africa treated cases moderately well, but some countries could not treat cases as effectively.</p>
+<h3 id="two-variable-plot-2-of-2"><strong>Two Variable Plot 2 of 2</strong></h3>
+<p>For our final bi variate graph, we wanted to explore where mean GDP was the largest among the six continents. However, the variable poses an issue as some values enter the trillions for some countries. Thus to counterract this, we will mutate a variable that will calculate GDP per hundred million.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>new_data<span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">group_by</span>(continent)<span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">mutate</span>(gdp_per_hunmillion <span style="color:#f92672">=</span> GDP<span style="color:#f92672">/</span><span style="color:#ae81ff">100000000</span>) <span style="color:#f92672">%&gt;%</span> <span style="color:#75715e"># creates variable</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">select</span>(gdp_per_hunmillion) <span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">summarise</span>(gdp_per_hunmillion <span style="color:#f92672">=</span> <span style="color:#a6e22e">mean</span>(gdp_per_hunmillion)) <span style="color:#f92672">%&gt;%</span> <span style="color:#75715e"># find mean of gdp</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">ggplot</span>(<span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>gdp_per_hunmillion,y<span style="color:#f92672">=</span><span style="color:#a6e22e">reorder</span>(continent, <span style="color:#f92672">+</span>gdp_per_hunmillion),color<span style="color:#f92672">=</span>continent))<span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">geom_bar</span>(stat <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;identity&#34;</span>, fill <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;black&#34;</span>) <span style="color:#f92672">+</span> <span style="color:#75715e"># Use of stat function</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">theme_classic</span>() <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">scale_x_continuous</span>(breaks <span style="color:#f92672">=</span> <span style="color:#a6e22e">seq</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">10000</span>, <span style="color:#ae81ff">1000</span>)) <span style="color:#f92672">+</span> <span style="color:#75715e"># Makes scale more legible</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">theme</span>(legend.position <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;none&#34;</span>) <span style="color:#f92672">+</span> <span style="color:#75715e">#removes legend</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">labs</span>(x<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;GDP (hundred Billion)&#34;</span>,y<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Continents&#34;</span>,title<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;The Average GDP per Continent per Hundred Billion&#34;</span>)
+</span></span></code></pre></div><pre tabindex="0"><code>## Adding missing grouping variables: `continent`
+</code></pre><!-- raw HTML omitted -->
+<p>After creating our bivariate graph, it was found that North America had the largest mean GDP. Before creating our bar graph, we had thought that Oceania would have the least mean GDP just because of the lack of countries. However, that was not the case since Africa&rsquo;s mean GDP was more than 3 times smaller than that of Oceania&rsquo;s.</p>
+<h3 id="three-variable-plot-1-of-2"><strong>Three Variable Plot 1 of 2</strong></h3>
+<p>For our first three variable visualization, we wanted to investigate the influence median age had on the variables human development index and by continent. As said earlier, human development index is the measure ofof life expectancy, education, and per capita income in a single metric. With this, the hope is to visualize some sort of connection between the three variables which could be an indicator of covid 19 presence within continents.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>new_data<span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">filter</span>(`Med. Age` <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;N.A.&#34;</span>)<span style="color:#f92672">%&gt;%</span> <span style="color:#75715e"># taking out &#34;N.A.&#34; values from `Med. Age`</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">ggplot</span>(<span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span><span style="color:#a6e22e">as.factor</span>(`Med. Age`),y<span style="color:#f92672">=</span>human_development_index,color<span style="color:#f92672">=</span>continent))<span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">geom_point</span>() <span style="color:#f92672">+</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">theme_dark</span>()<span style="color:#f92672">+</span> <span style="color:#75715e"># changes theme</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">theme</span>(axis.text.x <span style="color:#f92672">=</span> <span style="color:#a6e22e">element_text</span>(angle <span style="color:#f92672">=</span> <span style="color:#ae81ff">45</span>, hjust <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>))<span style="color:#f92672">+</span> <span style="color:#75715e">#rotates x scale numbers</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">scale_y_continuous</span>(breaks <span style="color:#f92672">=</span> <span style="color:#a6e22e">seq</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">.1</span>))<span style="color:#f92672">+</span> <span style="color:#75715e"># rescales the y axis </span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">labs</span>(x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Median Age&#34;</span>, y <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Human Development Index&#34;</span>,
+</span></span><span style="display:flex;"><span>       title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;The Human Development Index per Median Age of each Country by Continent&#34;</span>) <span style="color:#75715e">#labels</span>
+</span></span></code></pre></div><pre tabindex="0"><code>## Warning: Removed 4 rows containing missing values (`geom_point()`).
+</code></pre><!-- raw HTML omitted -->
+<p>After creating a trivariable representation which maps human development index by median age per country by continent, we interestingly found a positive relationship between median age and the human development index. In contextual terms, this means that when median age increases, the development index increases as well. THis makes sense because if a country were to have a higher median age, that means that the country has a much more sustainable health care system which keeps the elderly alive and well. Since this was a trivariable graph, we were able to see where continents ranked among other continents based off the two variables. Based off the graph, one can see that the majority of countries within the African continent had th elowest median ages of all. Although more subtle, at the height of the median age range, that is where the majority of European countries are found.</p>
+<h3 id="three-variable-plot-2-of-2"><strong>Three Variable Plot 2 of 2</strong></h3>
+<p>For our final three variable plot, we wanted to investigate if there was a positive trend between urban population and total number of cases. Our prediction is that as the urban percentage increases, as will the total number of cases since that would imply that the population is much more compact into sertain areas. However, sice urban population is a categorical variable, we must do some manipulation to be able to plot the graph accurately.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>new_data <span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">mutate</span>(urban_pop <span style="color:#f92672">=</span> <span style="color:#a6e22e">as.numeric</span>(<span style="color:#a6e22e">str_remove_all</span>(new_data<span style="color:#f92672">$</span>`Urban Pop %`, <span style="color:#e6db74">&#34;[%]&#34;</span>))) <span style="color:#f92672">%&gt;%</span> <span style="color:#75715e"># Removes the percent sign from all observations </span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">select</span>(continent, total_cases, urban_pop) <span style="color:#f92672">%&gt;%</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">filter</span>(<span style="color:#f92672">!</span><span style="color:#a6e22e">is.na</span>(total_cases), <span style="color:#f92672">!</span><span style="color:#a6e22e">is.na</span>(urban_pop)) <span style="color:#f92672">%&gt;%</span> <span style="color:#75715e"># remove NA values</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">ggplot</span>(<span style="color:#a6e22e">aes</span>(x <span style="color:#f92672">=</span> urban_pop, y <span style="color:#f92672">=</span> total_cases, color <span style="color:#f92672">=</span> continent)) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">geom_point</span>() <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">ylim</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2500000</span>) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">theme_light</span>() <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">labs</span>(x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Urban Population (%)&#34;</span>, y <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Total Cases&#34;</span>, 
+</span></span><span style="display:flex;"><span>       title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;The Total Number of Cases by Urban Population Colored by Continent&#34;</span>)
+</span></span></code></pre></div><pre tabindex="0"><code>## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+</code></pre><pre tabindex="0"><code>## Warning: Removed 5 rows containing missing values (`geom_point()`).
+</code></pre><!-- raw HTML omitted -->
+<p>After creating our final trivariable representation mappingtotal cases for each percentage of urban population, interestngly enough, there was little to no correlation between the two variables. As Urban population did exceed 60%, the number of cases did increase as well. However, there was no constant correlation implying that the two variables were related.</p>
+
+            
+        <hr>         <div class="related-posts">
+                <h5>Related Posts</h5>
+                
+              </div> 
+            </div>
+          </div>
+
+   <hr>  <div class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div> 
+        </div>
+      </div>
+    </div>
+
+    
+    <footer>
+  <div id="footer">
+    <div class="container">
+      <p class="text-muted">&copy; All rights reserved. Powered by <a href="https://gohugo.io/">Hugo</a> and
+      <a href="http://www.github.com/nurlansu/hugo-sustain/">sustain</a> with ♥</p>
+    </div>
+  </div>
+</footer>
+<div class="footer"></div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/docs.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script src="/js/ie10-viewport-bug-workaround.js"></script>
+
+
+    
+  </body>
+</html>
